@@ -1,0 +1,153 @@
+<project>
+    <shortName>PostgresInstaller</shortName>
+    <fullName>PostgreSQL Installer</fullName>
+    <version>1.0</version>
+    <componentList>
+        <component>
+            <name>default</name>
+            <description>Default Component</description>
+            <canBeEdited>1</canBeEdited>
+            <selected>1</selected>
+            <show>1</show>
+            <folderList>
+                <folder>
+                    <description>Installer</description>
+                    <destination>${installdir}/installer</destination>
+                    <name>installer</name>
+                    <platforms>linux-x64</platforms>
+                    <distributionFileList>
+                        <distributionFile>
+                            <origin>/home/truc/work/living-days-2/postgres/postgresql-9.1.13-4-linux-x64-binaries.zip</origin>
+                        </distributionFile>
+                    </distributionFileList>
+                </folder>
+            </folderList>
+            <startMenuShortcutList>
+                <startMenuShortcut>
+                    <comment>Uninstall ${product_fullname}</comment>
+                    <name>Uninstall ${product_fullname}</name>
+                    <runAsAdmin>0</runAsAdmin>
+                    <runInTerminal>0</runInTerminal>
+                    <windowsExec>${installdir}/${uninstallerName}.exe</windowsExec>
+                    <windowsExecArgs></windowsExecArgs>
+                    <windowsIcon></windowsIcon>
+                    <windowsPath>${installdir}/</windowsPath>
+                </startMenuShortcut>
+            </startMenuShortcutList>
+        </component>
+    </componentList>
+    <preInstallationActionList>
+        <waitForPort>
+            <port>5432</port>
+            <progressText>Waiting for port ${postgresPort} to be available...</progressText>
+            <state>free</state>
+            <timeout>5000</timeout>
+            <onErrorActionList>
+                <throwError>
+                    <text>Busy PostgreSQL port ${postgresPort}</text>
+                </throwError>
+            </onErrorActionList>
+            <ruleList>
+                <portTest>
+                    <condition>can_bind</condition>
+                    <port>5432</port>
+                </portTest>
+            </ruleList>
+        </waitForPort>
+    </preInstallationActionList>
+    <postInstallationActionList>
+        <unzip>
+            <destinationDirectory>${installdir}</destinationDirectory>
+            <zipFile>${installdir}/installer/postgresql-9.1.13-4-linux-x64-binaries.zip</zipFile>
+        </unzip>
+        <setEnvironmentVariable>
+            <name>PGDATA</name>
+            <value>${installdir}/pgsql/data</value>
+        </setEnvironmentVariable>
+        <runProgram>
+            <program>${installdir}/pgsql/bin/initdb</program>
+            <programArguments>--locale=en_US.UTF-8 --encoding=UNICODE</programArguments>
+        </runProgram>
+        <addTextToFile>
+            <file>${installdir}/pgsql/data/pg_hba.conf</file>
+            <text>host all  all    0.0.0.0/0  md5</text>
+        </addTextToFile>
+        <propertiesFileSet>
+            <file>${installdir}/pgsql/data/postgresql.conf</file>
+            <key>listen_addresses</key>
+            <value>'*'</value>
+        </propertiesFileSet>
+        <propertiesFileSet>
+            <file>${installdir}/pgsql/data/postgresql.conf</file>
+            <key>max_connections</key>
+            <value>10</value>
+        </propertiesFileSet>
+        <propertiesFileSet>
+            <file>${installdir}/pgsql/data/postgresql.conf</file>
+            <key>max_prepared_transactions</key>
+            <value>10</value>
+        </propertiesFileSet>
+        <runProgram>
+            <program>${installdir}/pgsql/bin/pg_ctl</program>
+            <programArguments>-l postgresql.log start</programArguments>
+            <progressText>Starting PostgreSQL server...</progressText>
+        </runProgram>
+        <waitForPort>
+            <port>5432</port>
+            <progressText>Waiting for PostgreSQL server to start...</progressText>
+            <state>in_use</state>
+            <timeout>15000</timeout>
+            <onErrorActionList>
+                <throwError>
+                    <text>Failed to start PostgreSQL server :(</text>
+                </throwError>
+            </onErrorActionList>
+            <ruleList>
+                <portTest>
+                    <condition>cannot_bind</condition>
+                    <port>5432</port>
+                </portTest>
+            </ruleList>
+        </waitForPort>
+        <wait>
+            <ms>5000</ms>
+        </wait>
+        <runProgram>
+            <program>${installdir}/pgsql/bin/psql</program>
+            <programArguments>-d postgres -c "CREATE ROLE bonita WITH LOGIN PASSWORD 'bpm'"</programArguments>
+            <progressText>Creating Bonita BPM user...</progressText>
+        </runProgram>
+        <runProgram>
+            <program>${installdir}/pgsql/bin/psql</program>
+            <programArguments>-d postgres -c "CREATE DATABASE bonitabpm6"</programArguments>
+        </runProgram>
+        <runProgram>
+            <program>${installdir}/pgsql/bin/psql</program>
+            <programArguments>-d postgres -c "GRANT ALL PRIVILEGES ON DATABASE bonitabpm6 TO bonita"</programArguments>
+        </runProgram>
+    </postInstallationActionList>
+    <postUninstallationActionList>
+        <deleteFile>
+            <path>${installdir}/pgsql</path>
+        </deleteFile>
+    </postUninstallationActionList>
+    <enableRollback>1</enableRollback>
+    <enableTimestamp>1</enableTimestamp>
+    <vendor>Bonitasoft</vendor>
+    <parameterList>
+        <directoryParameter>
+            <name>installdir</name>
+            <description>Installer.Parameter.installdir.description</description>
+            <explanation>Installer.Parameter.installdir.explanation</explanation>
+            <value></value>
+            <default>${platform_install_prefix}/${product_shortname}-${product_version}</default>
+            <allowEmptyValue>0</allowEmptyValue>
+            <ask>yes</ask>
+            <cliOptionName>prefix</cliOptionName>
+            <mustBeWritable>yes</mustBeWritable>
+            <mustExist>0</mustExist>
+            <width>30</width>
+        </directoryParameter>
+    </parameterList>
+</project>
+
