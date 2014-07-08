@@ -11,6 +11,16 @@
             <selected>1</selected>
             <show>1</show>
             <parameterList>
+                <stringParameter>
+                    <name>tomcatPort</name>
+                    <title>Tomcat port</title>
+                    <description></description>
+                    <explanation></explanation>
+                    <value></value>
+                    <default>8080</default>
+                    <allowEmptyValue>0</allowEmptyValue>
+                    <width>30</width>
+                </stringParameter>
                 <directoryParameter>
                     <name>installdir</name>
                     <description>Installer.Parameter.installdir.description</description>
@@ -23,6 +33,66 @@
                     <mustExist>0</mustExist>
                     <width>40</width>
                 </directoryParameter>
+                <stringParameter>
+                    <name>tenantadminusername</name>
+                    <title>Set the default tenant username</title>
+                    <description>Default tenant username</description>
+                    <explanation></explanation>
+                    <value></value>
+                    <default>living</default>
+                    <allowEmptyValue>0</allowEmptyValue>
+                    <width>30</width>
+                </stringParameter>
+                <stringParameter>
+                    <name>tenantadminpassword</name>
+                    <title>Set the default tenant pasword</title>
+                    <description>Default tenant password</description>
+                    <explanation></explanation>
+                    <value></value>
+                    <default>day</default>
+                    <allowEmptyValue>0</allowEmptyValue>
+                    <width>30</width>
+                </stringParameter>
+                <stringParameter>
+                    <name>platformAdmin</name>
+                    <title>Platform administrator name</title>
+                    <description></description>
+                    <explanation></explanation>
+                    <value></value>
+                    <default>platformAdmin</default>
+                    <allowEmptyValue>0</allowEmptyValue>
+                    <width>30</width>
+                </stringParameter>
+                <passwordParameter>
+                    <name>platformPassword</name>
+                    <title>Platform administrator password</title>
+                    <description></description>
+                    <explanation></explanation>
+                    <value></value>
+                    <default>platformPassword</default>
+                    <allowEmptyValue>0</allowEmptyValue>
+                    <descriptionRetype></descriptionRetype>
+                    <width>20</width>
+                </passwordParameter>
+                <stringParameter>
+                    <name>dbUsername</name>
+                    <description></description>
+                    <explanation></explanation>
+                    <value></value>
+                    <default>sa</default>
+                    <allowEmptyValue>0</allowEmptyValue>
+                    <width>30</width>
+                </stringParameter>
+                <passwordParameter>
+                    <name>dbPassword</name>
+                    <description></description>
+                    <explanation></explanation>
+                    <value></value>
+                    <default>root</default>
+                    <allowEmptyValue>0</allowEmptyValue>
+                    <descriptionRetype></descriptionRetype>
+                    <width>20</width>
+                </passwordParameter>
                 <choiceParameter>
                     <name>dbVendor</name>
                     <title>db.vendor.title</title>
@@ -48,27 +118,36 @@
                             <value>postgres</value>
                         </option>
                     </optionList>
+                    <postShowPageActionList>
+                        <if>
+                            <actionList>
+                                <setInstallerVariable>
+                                    <name>jdbc.driver</name>
+                                    <value>org.h2.Driver</value>
+                                </setInstallerVariable>
+                                <setInstallerVariable>
+                                    <name>jdbc.url</name>
+                                    <value>jdbc:h2:tcp://localhost:9091/bonita_journal.db;MVCC=TRUE;DB_CLOSE_ON_EXIT=TRUE;IGNORECASE=TRUE;</value>
+                                </setInstallerVariable>
+                            </actionList>
+                            <conditionRuleList>
+                                <isTrue>
+                                    <value>${h2}</value>
+                                </isTrue>
+                            </conditionRuleList>
+                            <elseActionList>
+                                <setInstallerVariable>
+                                    <name>jdbc.driver</name>
+                                    <value>org.postgresql.Driver</value>
+                                </setInstallerVariable>
+                                <setInstallerVariable>
+                                    <name>jdbc.url</name>
+                                    <value>jdbc:postgresql://${postgres_host}:${postgres_port}/${postgres_db_name}</value>
+                                </setInstallerVariable>
+                            </elseActionList>
+                        </if>
+                    </postShowPageActionList>
                 </choiceParameter>
-                <stringParameter>
-                    <name>tenantadminusername</name>
-                    <title>Set the default tenant username</title>
-                    <description>Default tenant username</description>
-                    <explanation></explanation>
-                    <value></value>
-                    <default>living</default>
-                    <allowEmptyValue>0</allowEmptyValue>
-                    <width>30</width>
-                </stringParameter>
-                <stringParameter>
-                    <name>tenantadminpassword</name>
-                    <title>Set the default tenant pasword</title>
-                    <description>Default tenant password</description>
-                    <explanation></explanation>
-                    <value></value>
-                    <default>day</default>
-                    <allowEmptyValue>0</allowEmptyValue>
-                    <width>30</width>
-                </stringParameter>
             </parameterList>
             <postInstallationActionList>
                 <copyFile>
@@ -91,6 +170,30 @@
                     <key>platform.tenant.default.password</key>
                     <value>${tenantadminpassword}</value>
                 </propertiesFileSet>
+                <propertiesFileSet>
+                    <explanation>Updating bonita Platform username</explanation>
+                    <file>${installdir}/BonitaBPMCommunity-6.3.2-Tomcat-6.0.37/bonita/server/platform/conf/bonita-platform.properties</file>
+                    <key>platformAdminUsername</key>
+                    <value>${platformAdmin}</value>
+                </propertiesFileSet>
+                <propertiesFileSet>
+                    <explanation>Updating bonita Platform password</explanation>
+                    <file>${installdir}/BonitaBPMCommunity-6.3.2-Tomcat-6.0.37/bonita/server/platform/conf/bonita-platform.properties</file>
+                    <key>platformAdminPassword</key>
+                    <value>${platformPassword}</value>
+                </propertiesFileSet>
+                <propertiesFileSet>
+                    <explanation>Updating bonita default Tenant username</explanation>
+                    <file>${installdir}/BonitaBPMCommunity-6.3.2-Tomcat-6.0.37/bonita/server/platform/tenant-template/conf/bonita-server.properties</file>
+                    <key>userName</key>
+                    <value>${tenantadminusername}</value>
+                </propertiesFileSet>
+                <propertiesFileSet>
+                    <explanation>Updating bonita default Tenant password</explanation>
+                    <file>${installdir}/BonitaBPMCommunity-6.3.2-Tomcat-6.0.37/bonita/server/platform/tenant-template/conf/bonita-server.properties</file>
+                    <key>userPassword</key>
+                    <value>${tenantadminpassword}</value>
+                </propertiesFileSet>
                 <substitute>
                     <files>${installdir}/BonitaBPMCommunity-6.3.2-Tomcat-6.0.37/bin/setenv.sh</files>
                     <type>regexp</type>
@@ -101,6 +204,18 @@
                         </substitution>
                     </substitutionList>
                 </substitute>
+                <xmlFileSet>
+                    <attribute>username</attribute>
+                    <element>//Context/Resource[@name="bonitaSequenceManagerDS"]</element>
+                    <file>${installdir}/BonitaBPMCommunity-6.3.2-Tomcat-6.0.37/conf/Catalina/localhost/bonita.xml</file>
+                    <value>${dbUsername}</value>
+                </xmlFileSet>
+                <xmlFileSet>
+                    <attribute>password</attribute>
+                    <element>//Context/Resource[@name="bonitaSequenceManagerDS"]</element>
+                    <file>${installdir}/BonitaBPMCommunity-6.3.2-Tomcat-6.0.37/conf/Catalina/localhost/bonita.xml</file>
+                    <value>${dbPassword}</value>
+                </xmlFileSet>
             </postInstallationActionList>
             <startMenuShortcutList>
                 <startMenuShortcut>
@@ -231,38 +346,5 @@
             <file>${build_project_directory}/I18n/messages.properties</file>
         </language>
     </customLanguageFileList>
-    <parameterList>
-        <stringParameter>
-            <name>platformAdmin</name>
-            <title>Platform administrator name</title>
-            <description></description>
-            <explanation></explanation>
-            <value></value>
-            <default>platformAdmin</default>
-            <allowEmptyValue>0</allowEmptyValue>
-            <width>30</width>
-        </stringParameter>
-        <passwordParameter>
-            <name>platformPassword</name>
-            <title>Platform administrator password</title>
-            <description></description>
-            <explanation></explanation>
-            <value></value>
-            <default>platformPassword</default>
-            <allowEmptyValue>0</allowEmptyValue>
-            <descriptionRetype></descriptionRetype>
-            <width>20</width>
-        </passwordParameter>
-        <stringParameter>
-            <name>tomcatPort</name>
-            <title>Tomcat port</title>
-            <description></description>
-            <explanation></explanation>
-            <value></value>
-            <default>8080</default>
-            <allowEmptyValue>0</allowEmptyValue>
-            <width>30</width>
-        </stringParameter>
-    </parameterList>
 </project>
 
