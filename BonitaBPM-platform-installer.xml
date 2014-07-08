@@ -20,6 +20,10 @@
                             <progressText>Downloading Tomcat Bundle</progressText>
                             <url>http://download.forge.ow2.org/bonita/BonitaBPMCommunity-6.3.2-Tomcat-6.0.37.zip</url>
                         </httpGet>
+                        <unzip>
+                            <destinationDirectory>${installdir}</destinationDirectory>
+                            <zipFile>${installdir}/bundle.zip</zipFile>
+                        </unzip>
                     </actionList>
                 </folder>
             </folderList>
@@ -91,8 +95,66 @@
     <componentsDownloadDirectory>C:\</componentsDownloadDirectory>
     <enableRollback>1</enableRollback>
     <enableTimestamp>1</enableTimestamp>
-    <requireInstallationByRootUser>1</requireInstallationByRootUser>
     <style>custom</style>
     <vendor>Bonitasoft</vendor>
+    <parameterList>
+        <stringParameter>
+            <name>platformAdmin</name>
+            <title>Platform administrator name</title>
+            <description></description>
+            <explanation></explanation>
+            <value></value>
+            <default>platformAdmin</default>
+            <allowEmptyValue>0</allowEmptyValue>
+            <width>30</width>
+        </stringParameter>
+        <passwordParameter>
+            <name>platformPassword</name>
+            <title>Platform administrator password</title>
+            <description></description>
+            <explanation></explanation>
+            <value></value>
+            <default>platformPassword</default>
+            <allowEmptyValue>0</allowEmptyValue>
+            <descriptionRetype></descriptionRetype>
+            <width>20</width>
+        </passwordParameter>
+        <choiceParameter>
+            <name>dbVendor</name>
+            <title>Database vendor</title>
+            <description></description>
+            <explanation></explanation>
+            <value></value>
+            <default>h2</default>
+            <allowEmptyValue>0</allowEmptyValue>
+            <displayType>combobox</displayType>
+            <ordering>default</ordering>
+            <width>30</width>
+            <optionList>
+                <option>
+                    <description></description>
+                    <image></image>
+                    <text>H2</text>
+                    <value>h2</value>
+                </option>
+                <option>
+                    <description></description>
+                    <image></image>
+                    <text>PostgreSQL</text>
+                    <value>postgres</value>
+                </option>
+            </optionList>
+        </choiceParameter>
+        <stringParameter>
+            <name>tomcatPort</name>
+            <title>Tomcat port</title>
+            <description></description>
+            <explanation></explanation>
+            <value></value>
+            <default>8080</default>
+            <allowEmptyValue>0</allowEmptyValue>
+            <width>30</width>
+        </stringParameter>
+    </parameterList>
 </project>
 
