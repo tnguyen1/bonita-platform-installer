@@ -1,0 +1,165 @@
+<project>
+    <shortName>bonitabpmplatforminstaller</shortName>
+    <fullName>BonitaBPM Platform Installer</fullName>
+    <version>1.0</version>
+    <componentList>
+        <component>
+            <name>default</name>
+            <description>Default Component</description>
+            <canBeEdited>1</canBeEdited>
+            <selected>1</selected>
+            <show>1</show>
+            <folderList>
+                <folder>
+                    <description>Program Files</description>
+                    <destination>${installdir}</destination>
+                    <name>programfiles</name>
+                    <platforms>all</platforms>
+                    <shortcutList>
+                        <shortcut>
+                            <comment>Uninstall</comment>
+                            <exec>${installdir}/${uninstallerName}</exec>
+                            <icon></icon>
+                            <name>Uninstall ${product_fullname}</name>
+                            <path>${installdir}</path>
+                            <platforms>all</platforms>
+                            <runAsAdmin>0</runAsAdmin>
+                            <runInTerminal>0</runInTerminal>
+                            <windowsExec>${installdir}/${uninstallerName}.exe</windowsExec>
+                            <windowsExecArgs></windowsExecArgs>
+                            <windowsIcon></windowsIcon>
+                            <windowsPath>${installdir}</windowsPath>
+                        </shortcut>
+                    </shortcutList>
+                </folder>
+                <folder>
+                    <description>Program Files</description>
+                    <destination>${installdir}</destination>
+                    <name>programfileslinux</name>
+                    <platforms>linux</platforms>
+                </folder>
+                <folder>
+                    <description>Program Files</description>
+                    <destination>${installdir}</destination>
+                    <name>programfileswindows</name>
+                    <platforms>windows</platforms>
+                </folder>
+                <folder>
+                    <description>Program Files</description>
+                    <destination>${installdir}</destination>
+                    <name>programfilesosx</name>
+                    <platforms>osx</platforms>
+                </folder>
+                <folder>
+                    <description>Platform configuration</description>
+                    <destination>${installdir}/pfconf</destination>
+                    <name>pfconf</name>
+                    <platforms>all</platforms>
+                    <distributionFileList>
+                        <distributionDirectory>
+                            <origin>/home/truc/work/living-days-2/template/bonita_home</origin>
+                        </distributionDirectory>
+                        <distributionDirectory>
+                            <origin>/home/truc/work/living-days-2/template/Tomcat-6.0.37</origin>
+                        </distributionDirectory>
+                    </distributionFileList>
+                </folder>
+            </folderList>
+            <startMenuShortcutList>
+                <startMenuShortcut>
+                    <comment>Uninstall ${product_fullname}</comment>
+                    <name>Uninstall ${product_fullname}</name>
+                    <runAsAdmin>0</runAsAdmin>
+                    <runInTerminal>0</runInTerminal>
+                    <windowsExec>${installdir}/${uninstallerName}.exe</windowsExec>
+                    <windowsExecArgs></windowsExecArgs>
+                    <windowsIcon></windowsIcon>
+                    <windowsPath>${installdir}/</windowsPath>
+                </startMenuShortcut>
+            </startMenuShortcutList>
+        </component>
+    </componentList>
+    <postInstallationActionList>
+        <propertiesFileSet>
+            <file>${installdir]/pfconf/bonita_home/client/platform/conf/platform-tenant-config.properties</file>
+            <key>platform.tenant.default.username</key>
+            <value>${platformAdmin}</value>
+        </propertiesFileSet>
+    </postInstallationActionList>
+    <enableRollback>1</enableRollback>
+    <enableTimestamp>1</enableTimestamp>
+    <vendor>Bonitasoft</vendor>
+    <parameterList>
+        <directoryParameter>
+            <name>installdir</name>
+            <description>Installer.Parameter.installdir.description</description>
+            <explanation>Installer.Parameter.installdir.explanation</explanation>
+            <value></value>
+            <default>${platform_install_prefix}/${product_shortname}-${product_version}</default>
+            <allowEmptyValue>0</allowEmptyValue>
+            <ask>yes</ask>
+            <cliOptionName>prefix</cliOptionName>
+            <mustBeWritable>yes</mustBeWritable>
+            <mustExist>0</mustExist>
+            <width>30</width>
+        </directoryParameter>
+        <stringParameter>
+            <name>platformAdmin</name>
+            <title>Platform administrator name</title>
+            <description></description>
+            <explanation></explanation>
+            <value></value>
+            <default>platformAdmin</default>
+            <allowEmptyValue>0</allowEmptyValue>
+            <width>30</width>
+        </stringParameter>
+        <passwordParameter>
+            <name>platformPassword</name>
+            <title>Platform administrator password</title>
+            <description></description>
+            <explanation></explanation>
+            <value></value>
+            <default>platformPassword</default>
+            <allowEmptyValue>0</allowEmptyValue>
+            <descriptionRetype></descriptionRetype>
+            <width>20</width>
+        </passwordParameter>
+        <choiceParameter>
+            <name>dbVendor</name>
+            <title>Database vendor</title>
+            <description></description>
+            <explanation></explanation>
+            <value></value>
+            <default>h2</default>
+            <allowEmptyValue>0</allowEmptyValue>
+            <displayType>combobox</displayType>
+            <ordering>default</ordering>
+            <width>30</width>
+            <optionList>
+                <option>
+                    <description></description>
+                    <image></image>
+                    <text>H2</text>
+                    <value>h2</value>
+                </option>
+                <option>
+                    <description></description>
+                    <image></image>
+                    <text>PostgreSQL</text>
+                    <value>postgres</value>
+                </option>
+            </optionList>
+        </choiceParameter>
+        <stringParameter>
+            <name>tomcatPort</name>
+            <title>Tomcat port</title>
+            <description></description>
+            <explanation></explanation>
+            <value></value>
+            <default>8080</default>
+            <allowEmptyValue>0</allowEmptyValue>
+            <width>30</width>
+        </stringParameter>
+    </parameterList>
+</project>
+
