@@ -10,24 +10,6 @@
             <canBeEdited>0</canBeEdited>
             <selected>1</selected>
             <show>1</show>
-            <folderList>
-                <folder>
-                    <destination>${installdir}/newfolder</destination>
-                    <name>newfolder</name>
-                    <platforms>all</platforms>
-                    <actionList>
-                        <httpGet>
-                            <filename>${installdir}/bundle.zip</filename>
-                            <progressText>Downloading Tomcat Bundle</progressText>
-                            <url>http://download.forge.ow2.org/bonita/BonitaBPMCommunity-6.3.2-Tomcat-6.0.37.zip</url>
-                        </httpGet>
-                        <unzip>
-                            <destinationDirectory>${installdir}</destinationDirectory>
-                            <zipFile>${installdir}/bundle.zip</zipFile>
-                        </unzip>
-                    </actionList>
-                </folder>
-            </folderList>
             <parameterList>
                 <directoryParameter>
                     <name>installdir</name>
@@ -67,7 +49,59 @@
                         </option>
                     </optionList>
                 </choiceParameter>
+                <stringParameter>
+                    <name>tenantadminusername</name>
+                    <title>Set the default tenant username</title>
+                    <description>Default tenant username</description>
+                    <explanation></explanation>
+                    <value></value>
+                    <default>living</default>
+                    <allowEmptyValue>0</allowEmptyValue>
+                    <width>30</width>
+                </stringParameter>
+                <stringParameter>
+                    <name>tenantadminpassword</name>
+                    <title>Set the default tenant pasword</title>
+                    <description>Default tenant password</description>
+                    <explanation></explanation>
+                    <value></value>
+                    <default>day</default>
+                    <allowEmptyValue>0</allowEmptyValue>
+                    <width>30</width>
+                </stringParameter>
             </parameterList>
+            <postInstallationActionList>
+                <copyFile>
+                    <destination>${installdir}</destination>
+                    <origin>/home/emmanuel/_work/living-day-2-innovation-week/bonitabpmplatforminstaller-1.0/bundle.zip</origin>
+                </copyFile>
+                <unzip>
+                    <destinationDirectory>${installdir}</destinationDirectory>
+                    <zipFile>${installdir}/bundle.zip</zipFile>
+                </unzip>
+                <propertiesFileSet>
+                    <explanation>Updating bonita default Tenant username</explanation>
+                    <file>${installdir}/BonitaBPMCommunity-6.3.2-Tomcat-6.0.37/bonita/client/platform/conf/platform-tenant-config.properties</file>
+                    <key>platform.tenant.default.username</key>
+                    <value>${tenantadminusername}</value>
+                </propertiesFileSet>
+                <propertiesFileSet>
+                    <explanation>Updating bonita default Tenant password</explanation>
+                    <file>${installdir}/BonitaBPMCommunity-6.3.2-Tomcat-6.0.37/bonita/client/platform/conf/platform-tenant-config.properties</file>
+                    <key>platform.tenant.default.password</key>
+                    <value>${tenantadminpassword}</value>
+                </propertiesFileSet>
+                <substitute>
+                    <files>${installdir}/BonitaBPMCommunity-6.3.2-Tomcat-6.0.37/bin/setenv.sh</files>
+                    <type>regexp</type>
+                    <substitutionList>
+                        <substitution>
+                            <pattern>h2</pattern>
+                            <value>${dbVendor}</value>
+                        </substitution>
+                    </substitutionList>
+                </substitute>
+            </postInstallationActionList>
             <startMenuShortcutList>
                 <startMenuShortcut>
                     <comment>Uninstall ${product_fullname}</comment>
