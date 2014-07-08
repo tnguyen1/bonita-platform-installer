@@ -11,16 +11,6 @@
             <selected>1</selected>
             <show>1</show>
             <parameterList>
-                <stringParameter>
-                    <name>tomcatPort</name>
-                    <title>Tomcat port</title>
-                    <description></description>
-                    <explanation></explanation>
-                    <value></value>
-                    <default>8080</default>
-                    <allowEmptyValue>0</allowEmptyValue>
-                    <width>30</width>
-                </stringParameter>
                 <directoryParameter>
                     <name>installdir</name>
                     <description>Installer.Parameter.installdir.description</description>
@@ -33,66 +23,6 @@
                     <mustExist>0</mustExist>
                     <width>40</width>
                 </directoryParameter>
-                <stringParameter>
-                    <name>tenantadminusername</name>
-                    <title>Set the default tenant username</title>
-                    <description>Default tenant username</description>
-                    <explanation></explanation>
-                    <value></value>
-                    <default>living</default>
-                    <allowEmptyValue>0</allowEmptyValue>
-                    <width>30</width>
-                </stringParameter>
-                <stringParameter>
-                    <name>tenantadminpassword</name>
-                    <title>Set the default tenant pasword</title>
-                    <description>Default tenant password</description>
-                    <explanation></explanation>
-                    <value></value>
-                    <default>day</default>
-                    <allowEmptyValue>0</allowEmptyValue>
-                    <width>30</width>
-                </stringParameter>
-                <stringParameter>
-                    <name>platformAdmin</name>
-                    <title>Platform administrator name</title>
-                    <description></description>
-                    <explanation></explanation>
-                    <value></value>
-                    <default>platformAdmin</default>
-                    <allowEmptyValue>0</allowEmptyValue>
-                    <width>30</width>
-                </stringParameter>
-                <passwordParameter>
-                    <name>platformPassword</name>
-                    <title>Platform administrator password</title>
-                    <description></description>
-                    <explanation></explanation>
-                    <value></value>
-                    <default>platformPassword</default>
-                    <allowEmptyValue>0</allowEmptyValue>
-                    <descriptionRetype></descriptionRetype>
-                    <width>20</width>
-                </passwordParameter>
-                <stringParameter>
-                    <name>dbUsername</name>
-                    <description></description>
-                    <explanation></explanation>
-                    <value></value>
-                    <default>sa</default>
-                    <allowEmptyValue>0</allowEmptyValue>
-                    <width>30</width>
-                </stringParameter>
-                <passwordParameter>
-                    <name>dbPassword</name>
-                    <description></description>
-                    <explanation></explanation>
-                    <value></value>
-                    <default>root</default>
-                    <allowEmptyValue>0</allowEmptyValue>
-                    <descriptionRetype></descriptionRetype>
-                    <width>20</width>
-                </passwordParameter>
                 <choiceParameter>
                     <name>dbVendor</name>
                     <title>db.vendor.title</title>
@@ -148,6 +78,113 @@
                         </if>
                     </postShowPageActionList>
                 </choiceParameter>
+                <stringParameter>
+                    <name>dbUsername</name>
+                    <description></description>
+                    <explanation></explanation>
+                    <value></value>
+                    <default>sa</default>
+                    <allowEmptyValue>0</allowEmptyValue>
+                    <width>30</width>
+                </stringParameter>
+                <passwordParameter>
+                    <name>dbPassword</name>
+                    <description></description>
+                    <explanation></explanation>
+                    <value></value>
+                    <default>root</default>
+                    <allowEmptyValue>0</allowEmptyValue>
+                    <descriptionRetype></descriptionRetype>
+                    <width>20</width>
+                </passwordParameter>
+                <parameterGroup>
+                    <name>platformConfiguration</name>
+                    <title>Platform configuration</title>
+                    <explanation>Platform configuration</explanation>
+                    <value></value>
+                    <default></default>
+                    <parameterList>
+                        <stringParameter>
+                            <name>tomcatPort</name>
+                            <title>Tomcat port</title>
+                            <description>Tomcat port</description>
+                            <explanation></explanation>
+                            <value></value>
+                            <default>${tomcatDefaultPort}</default>
+                            <allowEmptyValue>0</allowEmptyValue>
+                            <width>30</width>
+                            <preShowPageActionList>
+                                <getFreePort>
+                                    <finalPort>9999</finalPort>
+                                    <initialPort>8080</initialPort>
+                                    <variable>tomcatDefaultPort</variable>
+                                </getFreePort>
+                            </preShowPageActionList>
+                        </stringParameter>
+                        <booleanParameterGroup>
+                            <name>advancedPlatformConfiguration</name>
+                            <description>Advanced</description>
+                            <explanation></explanation>
+                            <value></value>
+                            <default></default>
+                            <validationType>ifSelected</validationType>
+                            <parameterList>
+                                <stringParameter>
+                                    <name>platformAdmin</name>
+                                    <title>Platform administrator username</title>
+                                    <description>Platform admin username</description>
+                                    <explanation></explanation>
+                                    <value></value>
+                                    <default>platformAdmin</default>
+                                    <allowEmptyValue>0</allowEmptyValue>
+                                    <width>30</width>
+                                </stringParameter>
+                                <passwordParameter>
+                                    <name>platformPassword</name>
+                                    <title>Platform administrator password</title>
+                                    <description>Platform admin password</description>
+                                    <explanation></explanation>
+                                    <value></value>
+                                    <default>platformPassword</default>
+                                    <allowEmptyValue>0</allowEmptyValue>
+                                    <askForConfirmation>0</askForConfirmation>
+                                    <descriptionRetype>Confirm password</descriptionRetype>
+                                    <width>20</width>
+                                </passwordParameter>
+                            </parameterList>
+                        </booleanParameterGroup>
+                    </parameterList>
+                </parameterGroup>
+                <parameterGroup>
+                    <name>defaultTenantConfig</name>
+                    <title>Default Tenant Configuration</title>
+                    <explanation></explanation>
+                    <value></value>
+                    <default></default>
+                    <parameterList>
+                        <stringParameter>
+                            <name>tenantadminusername</name>
+                            <title>Set the default tenant username</title>
+                            <description>Username</description>
+                            <explanation></explanation>
+                            <value></value>
+                            <default>living</default>
+                            <allowEmptyValue>0</allowEmptyValue>
+                            <width>30</width>
+                        </stringParameter>
+                        <passwordParameter>
+                            <name>tenantadminpassword</name>
+                            <title>Tenant admin password</title>
+                            <description>Password</description>
+                            <explanation></explanation>
+                            <value></value>
+                            <default></default>
+                            <allowEmptyValue>0</allowEmptyValue>
+                            <descriptionRetype>Confirm password</descriptionRetype>
+                            <width>20</width>
+                        </passwordParameter>
+                    </parameterList>
+                </parameterGroup>
             </parameterList>
             <postInstallationActionList>
                 <copyFile>
