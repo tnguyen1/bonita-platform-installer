@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<modelVersion>4.0.0</modelVersion>
+
+		<groupId>org.bonitasoft.distrib</groupId>
+		<artifactId>bonita-platform-installer</artifactId>
+		<version>6.3.2-SNAPSHOT</version>
+		<packaging>pom</packaging>
+
+	<properties>
+		<product.short.name>BonitaBPMCommunity</product.short.name>
+		<repositoryId>studio-repository</repositoryId>
+		<productId>org.bonitasoft.studio.product</productId>
+		<if.task>net.sf.antcontrib.logic.IfTask</if.task>
+		<jre.url>http://repositories.rd.lan/tools/studio-tools</jre.url>
+		<jre.winx86.url>jre1.7.0_55-windows</jre.winx86.url>
+		<jre.winx86.x64.url>jre1.7.0_55-windows-x64</jre.winx86.x64.url>
+		<jre.linuxx86.url>jre1.7.0_55-linux</jre.linuxx86.url>
+		<jre.linuxx86.x64.url>jre1.7.0_55-linux-x64</jre.linuxx86.x64.url>
+		<jre.osx.url>jre1.7.0_55-osx</jre.osx.url>
+	</properties>
+			<build>
+				<plugins>
+					<!-- Build installers for each platform -->
+				 	<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>exec-maven-plugin</artifactId>
+						<executions>
+							 <execution>
+								<id>build-windows-installer</id>
+								<phase>install</phase>
+								<configuration>
+									<arguments>
+										<argument>build</argument>
+										<argument>${basedir}/BonitaBPM-platform-installer.xml</argument>
+										<argument>windows</argument>
+									</arguments>
+								</configuration>
+								<goals>
+									<goal>exec</goal>
+								</goals>
+							</execution>
+							</executions>
+						<configuration>
+							<executable>${BITROCK_HOME}/bin/builder</executable>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+</project>
