@@ -2,6 +2,7 @@
     <shortName>BonitaBPMPlatform</shortName>
     <fullName>BonitaBPM Platform</fullName>
     <version>1.0</version>
+    <allowLanguageSelection>1</allowLanguageSelection>
     <componentList>
         <component>
             <name>bonitaPlatform</name>
@@ -40,6 +41,32 @@
                     <mustExist>0</mustExist>
                     <width>40</width>
                 </directoryParameter>
+                <choiceParameter>
+                    <name>dbVendor</name>
+                    <title>db.vendor.title</title>
+                    <description>db.vendor.description</description>
+                    <explanation></explanation>
+                    <value></value>
+                    <default>h2</default>
+                    <allowEmptyValue>0</allowEmptyValue>
+                    <displayType>radiobuttons</displayType>
+                    <ordering>default</ordering>
+                    <width>30</width>
+                    <optionList>
+                        <option>
+                            <description>h2.option.description</description>
+                            <image>${build_project_directory}/img/h2.png</image>
+                            <text>H2</text>
+                            <value>h2</value>
+                        </option>
+                        <option>
+                            <description>postgres.option.description</description>
+                            <image>${build_project_directory}/img/postgresql.png</image>
+                            <text>PostgreSQL</text>
+                            <value>postgres</value>
+                        </option>
+                    </optionList>
+                </choiceParameter>
             </parameterList>
             <startMenuShortcutList>
                 <startMenuShortcut>
@@ -95,8 +122,14 @@
     <componentsDownloadDirectory>C:\</componentsDownloadDirectory>
     <enableRollback>1</enableRollback>
     <enableTimestamp>1</enableTimestamp>
-    <style>custom</style>
     <vendor>Bonitasoft</vendor>
+    <customLanguageFileList>
+        <language>
+            <code>en</code>
+            <encoding>utf-8</encoding>
+            <file>${build_project_directory}/I18n/messages.properties</file>
+        </language>
+    </customLanguageFileList>
     <parameterList>
         <stringParameter>
             <name>platformAdmin</name>
@@ -119,32 +152,6 @@
             <descriptionRetype></descriptionRetype>
             <width>20</width>
         </passwordParameter>
-        <choiceParameter>
-            <name>dbVendor</name>
-            <title>Database vendor</title>
-            <description></description>
-            <explanation></explanation>
-            <value></value>
-            <default>h2</default>
-            <allowEmptyValue>0</allowEmptyValue>
-            <displayType>combobox</displayType>
-            <ordering>default</ordering>
-            <width>30</width>
-            <optionList>
-                <option>
-                    <description></description>
-                    <image></image>
-                    <text>H2</text>
-                    <value>h2</value>
-                </option>
-                <option>
-                    <description></description>
-                    <image></image>
-                    <text>PostgreSQL</text>
-                    <value>postgres</value>
-                </option>
-            </optionList>
-        </choiceParameter>
         <stringParameter>
             <name>tomcatPort</name>
             <title>Tomcat port</title>
