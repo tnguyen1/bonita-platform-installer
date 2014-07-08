@@ -7,7 +7,7 @@
         <component>
             <name>bonitaPlatform</name>
             <description>BonitaBPM Platform</description>
-            <canBeEdited>1</canBeEdited>
+            <canBeEdited>0</canBeEdited>
             <selected>1</selected>
             <show>1</show>
             <folderList>
@@ -45,7 +45,7 @@
                     <name>dbVendor</name>
                     <title>db.vendor.title</title>
                     <description>db.vendor.description</description>
-                    <explanation></explanation>
+                    <explanation>db.vendor.description</explanation>
                     <value></value>
                     <default>h2</default>
                     <allowEmptyValue>0</allowEmptyValue>
@@ -54,13 +54,13 @@
                     <width>30</width>
                     <optionList>
                         <option>
-                            <description>h2.option.description</description>
+                            <description>${msg(h2.option.description)}</description>
                             <image>${build_project_directory}/img/h2.png</image>
                             <text>H2</text>
                             <value>h2</value>
                         </option>
                         <option>
-                            <description>postgres.option.description</description>
+                            <description>${msg(postgres.option.description)}</description>
                             <image>${build_project_directory}/img/postgresql.png</image>
                             <text>PostgreSQL</text>
                             <value>postgres</value>
@@ -94,13 +94,22 @@
             <canBeEdited>1</canBeEdited>
             <selected>0</selected>
             <show>1</show>
+            <folderList>
+                <folder>
+                    <description>Java Runtime Environment</description>
+                    <destination>${jreinstalldir}</destination>
+                    <name>jre</name>
+                    <platforms>all</platforms>
+                </folder>
+            </folderList>
             <parameterList>
                 <directoryParameter>
                     <name>jreinstalldir</name>
-                    <description>Installer.Parameter.jreinstalldir.description</description>
-                    <explanation>Installer.Parameter.jreinstalldir.explanation</explanation>
+                    <title>jre.installdir.title</title>
+                    <description>jre.installdir.label</description>
+                    <explanation>jre.installdir.description</explanation>
                     <value></value>
-                    <default>${platform_install_prefix}/jre</default>
+                    <default>${installdir}</default>
                     <allowEmptyValue>0</allowEmptyValue>
                     <cliOptionName>jre_install_dir</cliOptionName>
                     <mustBeWritable>1</mustBeWritable>
@@ -108,6 +117,64 @@
                     <width>40</width>
                 </directoryParameter>
             </parameterList>
+            <postInstallationActionList>
+                <setInstallerVariable>
+                    <name>jrePlatform</name>
+                    <value>jre1.7.0_55-linux</value>
+                    <ruleList>
+                        <platformTest>
+                            <type>linux-x86</type>
+                        </platformTest>
+                    </ruleList>
+                </setInstallerVariable>
+                <setInstallerVariable>
+                    <name>jrePlatform</name>
+                    <value>jre1.7.0_55-linux-x64</value>
+                    <ruleList>
+                        <platformTest>
+                            <type>linux-x64</type>
+                        </platformTest>
+                    </ruleList>
+                </setInstallerVariable>
+                <setInstallerVariable>
+                    <name>jrePlatform</name>
+                    <value>jre1.7.0_55-windows</value>
+                    <ruleList>
+                        <platformTest>
+                            <type>windows-x86</type>
+                        </platformTest>
+                    </ruleList>
+                </setInstallerVariable>
+                <setInstallerVariable>
+                    <name>jrePlatform</name>
+                    <value>jre1.7.0_55-windows-x64</value>
+                    <ruleList>
+                        <platformTest>
+                            <type>windows-x64</type>
+                        </platformTest>
+                    </ruleList>
+                </setInstallerVariable>
+                <setInstallerVariable>
+                    <name>jrePlatform</name>
+                    <value>jre1.7.0_55-osx</value>
+                    <ruleList>
+                        <platformTest>
+                            <type>osx-intel</type>
+                        </platformTest>
+                    </ruleList>
+                </setInstallerVariable>
+                <httpGet>
+                    <filename>${jreinstalldir}\jre.zip</filename>
+                    <url>http://repositories.rd.lan/tools/studio-tools/${jrePlatform}.zip</url>
+                </httpGet>
+                <unzip>
+                    <destinationDirectory>${jreinstalldir}</destinationDirectory>
+                    <zipFile>${jreinstalldir}/jre.zip</zipFile>
+                </unzip>
+                <deleteFile>
+                    <path>${jreinstalldir}/jre7.zip</path>
+                </deleteFile>
+            </postInstallationActionList>
         </component>
         <component>
             <name>h2Database</name>
