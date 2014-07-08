@@ -10,16 +10,13 @@
 		<packaging>pom</packaging>
 
 	<properties>
-		<product.short.name>BonitaBPMCommunity</product.short.name>
-		<repositoryId>studio-repository</repositoryId>
-		<productId>org.bonitasoft.studio.product</productId>
-		<if.task>net.sf.antcontrib.logic.IfTask</if.task>
 		<jre.url>http://repositories.rd.lan/tools/studio-tools</jre.url>
 		<jre.winx86.url>jre1.7.0_55-windows</jre.winx86.url>
 		<jre.winx86.x64.url>jre1.7.0_55-windows-x64</jre.winx86.x64.url>
 		<jre.linuxx86.url>jre1.7.0_55-linux</jre.linuxx86.url>
 		<jre.linuxx86.x64.url>jre1.7.0_55-linux-x64</jre.linuxx86.x64.url>
 		<jre.osx.url>jre1.7.0_55-osx</jre.osx.url>
+		<targetPlatform>windows</targetPlatform>
 	</properties>
 			<build>
 				<plugins>
@@ -35,7 +32,7 @@
 									<arguments>
 										<argument>build</argument>
 										<argument>${basedir}/BonitaBPM-platform-installer.xml</argument>
-										<argument>windows</argument>
+										<argument>${targetPlatform}</argument>
 									</arguments>
 								</configuration>
 								<goals>
