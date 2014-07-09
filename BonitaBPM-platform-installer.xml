@@ -89,7 +89,7 @@
                     <zipFile>${jreinstalldir}/jre.zip</zipFile>
                 </unzip>
                 <deleteFile>
-                    <path>${jreinstalldir}/jre7.zip</path>
+                    <path>${jreinstalldir}/jre.zip</path>
                 </deleteFile>
                 <setInstallerVariable>
                     <name>jre_home</name>
@@ -113,6 +113,13 @@
                     <destination>${postgresinstalldir}/pgsql</destination>
                     <name>postgresFolder</name>
                     <platforms>all</platforms>
+                    <ruleList>
+                        <compareValues>
+                            <logic>equals</logic>
+                            <value1>${dbVendor}</value1>
+                            <value2>postgres</value2>
+                        </compareValues>
+                    </ruleList>
                 </folder>
                 <folder>
                     <description>db drivers</description>
@@ -169,15 +176,28 @@
                                 </getFreePort>
                             </preShowPageActionList>
                         </stringParameter>
-                        <stringParameter>
+                        <directoryParameter>
                             <name>bonita_home</name>
                             <description>Bonita home folder</description>
                             <explanation>Bonita home is the main BonitaBPM configuration folder (leave it empty to use default value)</explanation>
                             <value></value>
                             <default></default>
                             <allowEmptyValue>1</allowEmptyValue>
-                            <width>30</width>
-                        </stringParameter>
+                            <mustBeWritable>0</mustBeWritable>
+                            <mustExist>0</mustExist>
+                            <width>40</width>
+                            <postShowPageActionList>
+                                <createDirectory>
+                                    <path>${bonita_home}</path>
+                                    <ruleList>
+                                        <fileExists>
+                                            <negate>1</negate>
+                                            <path>${bonita_home}</path>
+                                        </fileExists>
+                                    </ruleList>
+                                </createDirectory>
+                            </postShowPageActionList>
+                        </directoryParameter>
                         <booleanParameterGroup>
                             <name>advancedPlatformConfiguration</name>
                             <description>Advanced</description>
@@ -785,6 +805,24 @@
             <name>jre_home</name>
             <value></value>
         </setInstallerVariable>
+        <setInstallerVariable>
+            <name>catalinaExec</name>
+            <value>catalina.sh</value>
+            <ruleList>
+                <platformTest>
+                    <type>linux</type>
+                </platformTest>
+            </ruleList>
+        </setInstallerVariable>
+        <setInstallerVariable>
+            <name>catalinaExec</name>
+            <value>catalina.bat</value>
+            <ruleList>
+                <platformTest>
+                    <type>windows</type>
+                </platformTest>
+            </ruleList>
+        </setInstallerVariable>
     </preInstallationActionList>
     <postUninstallationActionList>
         <deleteFile>
@@ -804,6 +842,24 @@
             <file>${build_project_directory}/I18n/messages.properties</file>
         </language>
     </customLanguageFileList>
+    <finalPageActionList>
+        <actionGroup>
+            <progressText>Start BonitaBPM Platform</progressText>
+            <actionList>
+                <runProgram>
+                    <explanation>Start BonitaBPM Platform</explanation>
+                    <program>${installdir}/BonitaBPMCommunity-6.3.2-Tomcat-6.0.37/bin/${catalinaExec}</program>
+                    <programArguments>start</programArguments>
+                </runProgram>
+                <wait>
+                    <ms>5000</ms>
+                </wait>
+                <launchBrowser>
+                    <url>http://localhost:${tomcatPort}/bonita</url>
+                </launchBrowser>
+            </actionList>
+        </actionGroup>
+    </finalPageActionList>
     <licenseFileList>
         <licenseFile>
             <code>en</code>
