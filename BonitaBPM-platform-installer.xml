@@ -647,25 +647,67 @@
                         </compareValues>
                     </ruleList>
                 </propertiesFileSet>
-                <xmlFileSet>
-                    <attribute>port</attribute>
-                    <element>//Service[@name="Catalina"]/Connector[@protocol="HTTP/1.1"]</element>
-                    <file>${installdir}/BonitaBPMCommunity-6.3.2-Tomcat-6.0.37/conf/server.xml</file>
-                    <value>${tomcatPort}</value>
-                </xmlFileSet>
-                <xmlFileSet>
-                    <attribute>tcpPort</attribute>
-                    <element>//Listener[@className="org.bonitasoft.tomcat.H2Listener"]</element>
-                    <file>${installdir}/BonitaBPMCommunity-6.3.2-Tomcat-6.0.37/conf/server.xml</file>
-                    <value>${db_port}</value>
-                    <ruleList>
-                        <compareValues>
-                            <logic>equals</logic>
-                            <value1>${dbVendor}</value1>
-                            <value2>h2</value2>
-                        </compareValues>
-                    </ruleList>
-                </xmlFileSet>
+                <actionGroup>
+                    <explanation>Configure Tomcat ports</explanation>
+                    <progressText>Configuring Tomcat ports</progressText>
+                    <actionList>
+                        <mathExpression>
+                            <text>${tomcatPort}-71</text>
+                            <variable>tomcatAjpPort</variable>
+                        </mathExpression>
+                        <mathExpression>
+                            <text>${tomcatPort}-75</text>
+                            <variable>tomcatShutdownPort</variable>
+                        </mathExpression>
+                        <mathExpression>
+                            <text>${tomcatPort}+363</text>
+                            <variable>tomcatRedirectPort</variable>
+                        </mathExpression>
+                        <xmlFileSet>
+                            <attribute>port</attribute>
+                            <element>//Server[@shutdown="SHUTDOWN"]</element>
+                            <file>${installdir}/BonitaBPMCommunity-6.3.2-Tomcat-6.0.37/conf/server.xml</file>
+                            <value>${tomcatShutdownPort}</value>
+                        </xmlFileSet>
+                        <xmlFileSet>
+                            <attribute>port</attribute>
+                            <element>//Service[@name="Catalina"]/Connector[@protocol="HTTP/1.1"]</element>
+                            <file>${installdir}/BonitaBPMCommunity-6.3.2-Tomcat-6.0.37/conf/server.xml</file>
+                            <value>${tomcatPort}</value>
+                        </xmlFileSet>
+                        <xmlFileSet>
+                            <attribute>redirectPort</attribute>
+                            <element>//Service[@name="Catalina"]/Connector[@protocol="HTTP/1.1"]</element>
+                            <file>${installdir}/BonitaBPMCommunity-6.3.2-Tomcat-6.0.37/conf/server.xml</file>
+                            <value>${tomcatRedirectPort}</value>
+                        </xmlFileSet>
+                        <xmlFileSet>
+                            <attribute>port</attribute>
+                            <element>//Connector[@protocol="AJP/1.3"]</element>
+                            <file>${installdir}/BonitaBPMCommunity-6.3.2-Tomcat-6.0.37/conf/server.xml</file>
+                            <value>${tomcatAjpPort}</value>
+                        </xmlFileSet>
+                        <xmlFileSet>
+                            <attribute>redirectPort</attribute>
+                            <element>//Connector[@protocol="AJP/1.3"]</element>
+                            <file>${installdir}/BonitaBPMCommunity-6.3.2-Tomcat-6.0.37/conf/server.xml</file>
+                            <value>${tomcatRedirectPort}</value>
+                        </xmlFileSet>
+                        <xmlFileSet>
+                            <attribute>tcpPort</attribute>
+                            <element>//Listener[@className="org.bonitasoft.tomcat.H2Listener"]</element>
+                            <file>${installdir}/BonitaBPMCommunity-6.3.2-Tomcat-6.0.37/conf/server.xml</file>
+                            <value>${db_port}</value>
+                            <ruleList>
+                                <compareValues>
+                                    <logic>equals</logic>
+                                    <value1>${dbVendor}</value1>
+                                    <value2>h2</value2>
+                                </compareValues>
+                            </ruleList>
+                        </xmlFileSet>
+                    </actionList>
+                </actionGroup>
                 <actionGroup>
                     <explanation>postgres.configuration</explanation>
                     <progressText>Configuring Postgres Database...</progressText>
@@ -741,14 +783,6 @@
                             <key>port</key>
                             <value>${db_port}</value>
                         </propertiesFileSet>
-                        <waitForPort>
-                            <port>${db_port}</port>
-                            <state>in_use</state>
-                            <timeout>10000</timeout>
-                        </waitForPort>
-                        <wait>
-                            <ms>5000</ms>
-                        </wait>
                         <runProgram>
                             <program>${postgresinstalldir}/pgsql/bin/pg_ctl</program>
                             <programArguments>start -w -t 10 -l postgresql.log</programArguments>
@@ -773,6 +807,10 @@
                             <program>${postgresinstalldir}/pgsql/bin/psql</program>
                             <programArguments>-p ${db_port} -d postgres -c "GRANT ALL PRIVILEGES ON DATABASE ${postgres_db_name} TO ${dbUsername}"</programArguments>
                         </runProgram>
+                        <xmlFileCommentElement>
+                            <element>//Listener[@className="org.bonitasoft.tomcat.H2Listener"]</element>
+                            <file>${installdir}/BonitaBPMCommunity-6.3.2-Tomcat-6.0.37/conf/server.xml</file>
+                        </xmlFileCommentElement>
                     </actionList>
                     <ruleList>
                         <compareValues>
