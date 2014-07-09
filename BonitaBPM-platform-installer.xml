@@ -459,6 +459,18 @@
                         </compareValues>
                     </ruleList>
                 </addTextToFile>
+                <addTextToFile>
+                    <file>${installdir}/BonitaBPMCommunity-6.3.2-Tomcat-6.0.37/bin/setenv.bat</file>
+                    <text>set JRE_HOME=${jre_home}</text>
+                    <ruleList>
+                        <compareValues>
+                            <logic>equals</logic>
+                            <negate>1</negate>
+                            <value1>${jre_home}</value1>
+                            <value2></value2>
+                        </compareValues>
+                    </ruleList>
+                </addTextToFile>
                 <propertiesFileSet>
                     <file>${installdir}/BonitaBPMCommunity-6.3.2-Tomcat-6.0.37/conf/bitronix-resources.properties</file>
                     <key>resource.ds1.driverProperties.user</key>
@@ -487,7 +499,7 @@
                     <value>${db_port}</value>
                 </xmlFileSet>
                 <substitute>
-                    <files>${installdir}/BonitaBPMCommunity-6.3.2-Tomcat-6.0.37/bin/setenv.sh</files>
+                    <files>${installdir}/BonitaBPMCommunity-6.3.2-Tomcat-6.0.37/bin/setenv.*</files>
                     <type>regexp</type>
                     <substitutionList>
                         <substitution>
@@ -511,6 +523,24 @@
                         <substitution>
                             <pattern>-Dbonita.home=.*$</pattern>
                             <value>-Dbonita.home=${bonita_home}/bonita"</value>
+                        </substitution>
+                    </substitutionList>
+                </substitute>
+                <substitute>
+                    <files>${installdir}/BonitaBPMCommunity-6.3.2-Tomcat-6.0.37/bin/setenv.bat</files>
+                    <type>regexp</type>
+                    <ruleList>
+                        <compareValues>
+                            <logic>equals</logic>
+                            <negate>1</negate>
+                            <value1>${bonita_home}</value1>
+                            <value2></value2>
+                        </compareValues>
+                    </ruleList>
+                    <substitutionList>
+                        <substitution>
+                            <pattern>-Dbonita.home=.*$</pattern>
+                            <value>-Dbonita.home=${bonita_home}\bonita"</value>
                         </substitution>
                     </substitutionList>
                 </substitute>
