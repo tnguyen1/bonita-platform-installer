@@ -2,8 +2,8 @@
     <shortName>BonitaBPMPlatform</shortName>
     <fullName>BonitaBPM Platform</fullName>
     <version>1.0</version>
-    <leftImage>C:/Users/Romain/git/bonita-platform-installer/img/leftImage.png</leftImage>
-    <logoImage>C:/Users/Romain/git/bonita-platform-installer/img/topRight.png</logoImage>
+    <leftImage>${build_project_directory}/img/leftImage.png</leftImage>
+    <logoImage>${build_project_directory}/img/topRight.png</logoImage>
     <allowLanguageSelection>1</allowLanguageSelection>
     <componentList>
         <component>
