@@ -452,6 +452,12 @@
                     <key>resource.ds1.driverProperties.URL</key>
                     <value>${jdbc.url}</value>
                 </propertiesFileSet>
+                <xmlFileSet>
+                    <attribute>port</attribute>
+                    <element>//Service[@name="Catalina"]/Connector[@protocol="HTTP/1.1"]</element>
+                    <file>${installdir}/BonitaBPMCommunity-6.3.2-Tomcat-6.0.37/conf/server.xml</file>
+                    <value>${tomcatPort}</value>
+                </xmlFileSet>
             </postInstallationActionList>
             <startMenuShortcutList>
                 <startMenuShortcut>
