@@ -19,24 +19,6 @@
                     <name>jre</name>
                     <platforms>all</platforms>
                 </folder>
-                <folder>
-                    <description>db drivers</description>
-                    <destination>${installdir}/BonitaBPMCommunity-6.3.2-Tomcat-6.0.37/lib/bonita</destination>
-                    <name>drivers</name>
-                    <platforms>all</platforms>
-                    <distributionFileList>
-                        <distributionFile>
-                            <origin>${installdir}/postgresql-9.1-901-1.jdbc4.jar</origin>
-                        </distributionFile>
-                    </distributionFileList>
-                    <ruleList>
-                        <compareValues>
-                            <logic>equals</logic>
-                            <value1>${dbVendor}</value1>
-                            <value2>postgres</value2>
-                        </compareValues>
-                    </ruleList>
-                </folder>
             </folderList>
             <parameterList>
                 <directoryParameter>
@@ -743,7 +725,7 @@
                         </wait>
                         <runProgram>
                             <program>${postgresinstalldir}/pgsql/bin/pg_ctl</program>
-                            <programArguments>start -l postgresql.log</programArguments>
+                            <programArguments>start -w -t 10 -l postgresql.log</programArguments>
                             <progressText>Starting PostgreSQL server...</progressText>
                             <useMSDOSPath>0</useMSDOSPath>
                             <onErrorActionList>
@@ -754,16 +736,16 @@
                         </runProgram>
                         <runProgram>
                             <program>${postgresinstalldir}/pgsql/bin/psql</program>
-                            <programArguments>-p ${db_port} -d postgres -c "CREATE ROLE bonita WITH LOGIN PASSWORD 'bpm'"</programArguments>
+                            <programArguments>-p ${db_port} -d postgres -c "CREATE ROLE ${dbUsername} WITH LOGIN PASSWORD '${dbPassword}'"</programArguments>
                             <progressText>Creating Bonita BPM user...</progressText>
                         </runProgram>
                         <runProgram>
                             <program>${postgresinstalldir}/pgsql/bin/psql</program>
-                            <programArguments>-p ${db_port} -d postgres -c "CREATE DATABASE bonitabpm6"</programArguments>
+                            <programArguments>-p ${db_port} -d postgres -c "CREATE DATABASE ${postgres_db_name}"</programArguments>
                         </runProgram>
                         <runProgram>
                             <program>${postgresinstalldir}/pgsql/bin/psql</program>
-                            <programArguments>-p ${db_port} -d postgres -c "GRANT ALL PRIVILEGES ON DATABASE bonitabpm6 TO bonita"</programArguments>
+                            <programArguments>-p ${db_port} -d postgres -c "GRANT ALL PRIVILEGES ON DATABASE ${postgres_db_name} TO ${dbUsername}"</programArguments>
                         </runProgram>
                     </actionList>
                     <ruleList>
@@ -853,6 +835,11 @@
             <value></value>
         </setInstallerVariable>
     </preInstallationActionList>
+    <postUninstallerCreationActionList>
+        <deleteFile>
+            <path>${installdir}/*.zip</path>
+        </deleteFile>
+    </postUninstallerCreationActionList>
     <postUninstallationActionList>
         <deleteFile>
             <path>${installdir}/*</path>
