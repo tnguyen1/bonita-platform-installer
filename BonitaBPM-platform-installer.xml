@@ -2,8 +2,8 @@
     <shortName>BonitaBPMPlatform</shortName>
     <fullName>BonitaBPM Platform</fullName>
     <version>1.0</version>
-    <leftImage>C:\Users\Romain\git\bonita-platform-installer\img\leftImage.png</leftImage>
-    <logoImage>C:\Users\Romain\git\bonita-platform-installer\img\topRight.png</logoImage>
+    <leftImage>C:/Users/Romain/git/bonita-platform-installer/img/leftImage.png</leftImage>
+    <logoImage>C:/Users/Romain/git/bonita-platform-installer/img/topRight.png</logoImage>
     <allowLanguageSelection>1</allowLanguageSelection>
     <componentList>
         <component>
@@ -191,7 +191,7 @@
                             <mustBeWritable>0</mustBeWritable>
                             <mustExist>0</mustExist>
                             <width>40</width>
-                            <postShowPageActionList>
+                            <validationActionList>
                                 <createDirectory>
                                     <path>${bonita_home}</path>
                                     <ruleList>
@@ -201,7 +201,7 @@
                                         </fileExists>
                                     </ruleList>
                                 </createDirectory>
-                            </postShowPageActionList>
+                            </validationActionList>
                         </directoryParameter>
                         <booleanParameterGroup>
                             <name>advancedPlatformConfiguration</name>
@@ -905,12 +905,6 @@
                     <program>${installdir}/BonitaBPMCommunity-6.3.2-Tomcat-6.0.37/bin/${catalinaExec}</program>
                     <programArguments>start</programArguments>
                 </runProgram>
-                <wait>
-                    <ms>5000</ms>
-                </wait>
-                <launchBrowser>
-                    <url>http://localhost:${tomcatPort}/bonita</url>
-                </launchBrowser>
             </actionList>
         </actionGroup>
     </finalPageActionList>
