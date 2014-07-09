@@ -510,7 +510,7 @@
                     <substitutionList>
                         <substitution>
                             <pattern>-Dbonita.home=.*$</pattern>
-                            <value>${bonita_home}/bonita"</value>
+                            <value>-Dbonita.home=${bonita_home}/bonita"</value>
                         </substitution>
                     </substitutionList>
                 </substitute>
