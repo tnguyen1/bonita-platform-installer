@@ -437,6 +437,21 @@
                         </compareValues>
                     </ruleList>
                 </addTextToFile>
+                <propertiesFileSet>
+                    <file>${installdir}/BonitaBPMCommunity-6.3.2-Tomcat-6.0.37/conf/bitronix-resources.properties</file>
+                    <key>resource.ds1.driverProperties.user</key>
+                    <value>${dbUsername}</value>
+                </propertiesFileSet>
+                <propertiesFileSet>
+                    <file>${installdir}/BonitaBPMCommunity-6.3.2-Tomcat-6.0.37/conf/bitronix-resources.properties</file>
+                    <key>resource.ds1.driverProperties.password</key>
+                    <value>${dbPassword}</value>
+                </propertiesFileSet>
+                <propertiesFileSet>
+                    <file>${installdir}/BonitaBPMCommunity-6.3.2-Tomcat-6.0.37/conf/bitronix-resources.properties</file>
+                    <key>resource.ds1.driverProperties.URL</key>
+                    <value>${jdbc.url}</value>
+                </propertiesFileSet>
             </postInstallationActionList>
             <startMenuShortcutList>
                 <startMenuShortcut>
