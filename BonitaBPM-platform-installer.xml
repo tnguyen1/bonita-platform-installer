@@ -106,6 +106,26 @@
             <canBeEdited>0</canBeEdited>
             <selected>1</selected>
             <show>1</show>
+            <folderList>
+                <folder>
+                    <description>db drivers</description>
+                    <destination>${installdir}/BonitaBPMCommunity-6.3.2-Tomcat-6.0.37/lib/bonita</destination>
+                    <name>drivers</name>
+                    <platforms>all</platforms>
+                    <distributionFileList>
+                        <distributionFile>
+                            <origin>/home/emmanuel/workspace/bonita-platform-installer/drivers/postgresql-9.2-1003-jdbc4.jar</origin>
+                        </distributionFile>
+                    </distributionFileList>
+                    <ruleList>
+                        <compareValues>
+                            <logic>equals</logic>
+                            <value1>${dbVendor}</value1>
+                            <value2>postgres</value2>
+                        </compareValues>
+                    </ruleList>
+                </folder>
+            </folderList>
             <parameterList>
                 <directoryParameter>
                     <name>installdir</name>
@@ -143,6 +163,15 @@
                                 </getFreePort>
                             </preShowPageActionList>
                         </stringParameter>
+                        <stringParameter>
+                            <name>bonita_home</name>
+                            <description>Bonita home folder</description>
+                            <explanation>Bonita home is the main BonitaBPM configuration folder (leave it empty to use default value)</explanation>
+                            <value></value>
+                            <default></default>
+                            <allowEmptyValue>1</allowEmptyValue>
+                            <width>30</width>
+                        </stringParameter>
                         <booleanParameterGroup>
                             <name>advancedPlatformConfiguration</name>
                             <description>Advanced</description>
@@ -175,15 +204,6 @@
                                 </passwordParameter>
                             </parameterList>
                         </booleanParameterGroup>
-                        <stringParameter>
-                            <name>bonita_home</name>
-                            <description>Bonita home folder</description>
-                            <explanation>Bonita home is the main BonitaBPM configuration folder (leave it empty to use default value)</explanation>
-                            <value></value>
-                            <default></default>
-                            <allowEmptyValue>1</allowEmptyValue>
-                            <width>30</width>
-                        </stringParameter>
                     </parameterList>
                 </parameterGroup>
                 <parameterGroup>
@@ -289,6 +309,10 @@
                                     <name>jdbc.url</name>
                                     <value>jdbc:h2:tcp://localhost:${db_port}/bonita_journal.db;MVCC=TRUE;DB_CLOSE_ON_EXIT=TRUE;IGNORECASE=TRUE;</value>
                                 </setInstallerVariable>
+                                <setInstallerVariable>
+                                    <name>jdbc.xa.driver</name>
+                                    <value>org.h2.jdbcx.JdbcDataSource</value>
+                                </setInstallerVariable>
                             </actionList>
                             <conditionRuleList>
                                 <compareValues>
@@ -305,6 +329,10 @@
                                 <setInstallerVariable>
                                     <name>jdbc.url</name>
                                     <value>jdbc:postgresql://localhost:${db_port}/${postgres_db_name}</value>
+                                </setInstallerVariable>
+                                <setInstallerVariable>
+                                    <name>jdbc.xa.driver</name>
+                                    <value>org.postgresql.xa.PGXADataSource</value>
                                 </setInstallerVariable>
                             </elseActionList>
                         </if>
@@ -447,6 +475,12 @@
                     <file>${installdir}/BonitaBPMCommunity-6.3.2-Tomcat-6.0.37/conf/Catalina/localhost/bonita.xml</file>
                     <value>${jdbc.url}</value>
                 </xmlFileSet>
+                <xmlFileSet>
+                    <attribute>driverClassName</attribute>
+                    <element>//Context/Resource[@name="bonitaSequenceManagerDS"]</element>
+                    <file>${installdir}/BonitaBPMCommunity-6.3.2-Tomcat-6.0.37/conf/Catalina/localhost/bonita.xml</file>
+                    <value>${jdbc.driver}</value>
+                </xmlFileSet>
                 <addTextToFile>
                     <file>${installdir}/BonitaBPMCommunity-6.3.2-Tomcat-6.0.37/bin/setenv.sh</file>
                     <text>export JRE_HOME=${jre_home}</text>
@@ -473,6 +507,11 @@
                 </addTextToFile>
                 <propertiesFileSet>
                     <file>${installdir}/BonitaBPMCommunity-6.3.2-Tomcat-6.0.37/conf/bitronix-resources.properties</file>
+                    <key>resource.ds1.className</key>
+                    <value>${jdbc.xa.driver}</value>
+                </propertiesFileSet>
+                <propertiesFileSet>
+                    <file>${installdir}/BonitaBPMCommunity-6.3.2-Tomcat-6.0.37/conf/bitronix-resources.properties</file>
                     <key>resource.ds1.driverProperties.user</key>
                     <value>${dbUsername}</value>
                 </propertiesFileSet>
@@ -485,6 +524,66 @@
                     <file>${installdir}/BonitaBPMCommunity-6.3.2-Tomcat-6.0.37/conf/bitronix-resources.properties</file>
                     <key>resource.ds1.driverProperties.URL</key>
                     <value>${jdbc.url}</value>
+                    <ruleList>
+                        <compareValues>
+                            <logic>equals</logic>
+                            <value1>${dbVendor}</value1>
+                            <value2>h2</value2>
+                        </compareValues>
+                    </ruleList>
+                </propertiesFileSet>
+                <substitute>
+                    <files>${installdir}/BonitaBPMCommunity-6.3.2-Tomcat-6.0.37/conf/bitronix-resources.properties</files>
+                    <type>regexp</type>
+                    <ruleList>
+                        <compareValues>
+                            <logic>equals</logic>
+                            <value1>${dbVendor}</value1>
+                            <value2>postgres</value2>
+                        </compareValues>
+                    </ruleList>
+                    <substitutionList>
+                        <substitution>
+                            <pattern>^resource.ds1.driverProperties.URL.*$</pattern>
+                            <value></value>
+                        </substitution>
+                    </substitutionList>
+                </substitute>
+                <propertiesFileSet>
+                    <file>${installdir}/BonitaBPMCommunity-6.3.2-Tomcat-6.0.37/conf/bitronix-resources.properties</file>
+                    <key>resource.ds1.driverProperties.serverName</key>
+                    <value>localhost</value>
+                    <ruleList>
+                        <compareValues>
+                            <logic>equals</logic>
+                            <value1>${dbVendor}</value1>
+                            <value2>postgres</value2>
+                        </compareValues>
+                    </ruleList>
+                </propertiesFileSet>
+                <propertiesFileSet>
+                    <file>${installdir}/BonitaBPMCommunity-6.3.2-Tomcat-6.0.37/conf/bitronix-resources.properties</file>
+                    <key>resource.ds1.driverProperties.portNumber</key>
+                    <value>${db_port}</value>
+                    <ruleList>
+                        <compareValues>
+                            <logic>equals</logic>
+                            <value1>${dbVendor}</value1>
+                            <value2>postgres</value2>
+                        </compareValues>
+                    </ruleList>
+                </propertiesFileSet>
+                <propertiesFileSet>
+                    <file>${installdir}/BonitaBPMCommunity-6.3.2-Tomcat-6.0.37/conf/bitronix-resources.properties</file>
+                    <key>resource.ds1.driverProperties.databaseName</key>
+                    <value>${postgres_db_name}</value>
+                    <ruleList>
+                        <compareValues>
+                            <logic>equals</logic>
+                            <value1>${dbVendor}</value1>
+                            <value2>postgres</value2>
+                        </compareValues>
+                    </ruleList>
                 </propertiesFileSet>
                 <xmlFileSet>
                     <attribute>port</attribute>
@@ -497,6 +596,13 @@
                     <element>//Listener[@className="org.bonitasoft.tomcat.H2Listener"]</element>
                     <file>${installdir}/BonitaBPMCommunity-6.3.2-Tomcat-6.0.37/conf/server.xml</file>
                     <value>${db_port}</value>
+                    <ruleList>
+                        <compareValues>
+                            <logic>equals</logic>
+                            <value1>${dbVendor}</value1>
+                            <value2>h2</value2>
+                        </compareValues>
+                    </ruleList>
                 </xmlFileSet>
                 <substitute>
                     <files>${installdir}/BonitaBPMCommunity-6.3.2-Tomcat-6.0.37/bin/setenv.*</files>
