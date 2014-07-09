@@ -151,6 +151,11 @@
                     <mustBeWritable>1</mustBeWritable>
                     <mustExist>0</mustExist>
                     <width>40</width>
+                    <validationActionList>
+                        <createDirectory>
+                            <path>${installdir}</path>
+                        </createDirectory>
+                    </validationActionList>
                 </directoryParameter>
                 <parameterGroup>
                     <name>platformConfiguration</name>
@@ -171,7 +176,7 @@
                             <preShowPageActionList>
                                 <getFreePort>
                                     <finalPort>9999</finalPort>
-                                    <initialPort>8080</initialPort>
+                                    <initialPort>9000</initialPort>
                                     <variable>tomcatDefaultPort</variable>
                                 </getFreePort>
                             </preShowPageActionList>
@@ -245,7 +250,7 @@
                             <description>Username</description>
                             <explanation></explanation>
                             <value></value>
-                            <default>living</default>
+                            <default>living_admin</default>
                             <allowEmptyValue>0</allowEmptyValue>
                             <width>30</width>
                         </stringParameter>
@@ -377,7 +382,7 @@
                         </setInstallerVariable>
                         <setInstallerVariable>
                             <name>default_db_username</name>
-                            <value>bonita</value>
+                            <value>living_user</value>
                             <ruleList>
                                 <compareValues>
                                     <logic>equals</logic>
@@ -429,13 +434,18 @@
                             <mustBeWritable>1</mustBeWritable>
                             <mustExist>0</mustExist>
                             <width>40</width>
+                            <validationActionList>
+                                <createDirectory>
+                                    <path>${postgresinstalldir}</path>
+                                </createDirectory>
+                            </validationActionList>
                         </directoryParameter>
                         <stringParameter>
                             <name>postgres_db_name</name>
                             <description>Bonita database name</description>
                             <explanation></explanation>
                             <value></value>
-                            <default>bonita</default>
+                            <default>living_db</default>
                             <allowEmptyValue>0</allowEmptyValue>
                             <width>30</width>
                         </stringParameter>
@@ -459,9 +469,13 @@
                 </parameterGroup>
             </parameterList>
             <postInstallationActionList>
+                <httpGet>
+                    <filename>${installdir}/BonitaBPMCommunity-6.3.2-Tomcat-6.0.37.zip</filename>
+                    <url>http://192.168.0.53:8000/BonitaBPMCommunity-6.3.2-Tomcat-6.0.37.zip</url>
+                </httpGet>
                 <unzip>
                     <destinationDirectory>${installdir}</destinationDirectory>
-                    <zipFile>C:\Users\Romain\git\bonita-platform-installer\bundle.zip</zipFile>
+                    <zipFile>${installdir}/BonitaBPMCommunity-6.3.2-Tomcat-6.0.37.zip</zipFile>
                 </unzip>
                 <propertiesFileSet>
                     <explanation>Updating bonita default Tenant username</explanation>
@@ -650,9 +664,31 @@
                     <explanation>postgres.configuration</explanation>
                     <progressText>Configuring Postgres Database...</progressText>
                     <actionList>
+                        <setInstallerVariable>
+                            <name>pgsqlPlatform</name>
+                            <value>linux-x64</value>
+                            <ruleList>
+                                <platformTest>
+                                    <type>linux-x64</type>
+                                </platformTest>
+                            </ruleList>
+                        </setInstallerVariable>
+                        <setInstallerVariable>
+                            <name>pgsqlPlatform</name>
+                            <value>windows-x64</value>
+                            <ruleList>
+                                <platformTest>
+                                    <type>windows-x64</type>
+                                </platformTest>
+                            </ruleList>
+                        </setInstallerVariable>
+                        <httpGet>
+                            <filename>${installdir}/postgresql-9.1.13-4-${pgsqlPlatform}-binaries.zip</filename>
+                            <url>http://192.168.0.53:8000/postgresql-9.1.13-4-${pgsqlPlatform}-binaries.zip</url>
+                        </httpGet>
                         <unzip>
                             <destinationDirectory>${postgresinstalldir}</destinationDirectory>
-                            <zipFile>C:\Users\Romain\git\bonita-platform-installer\postgresql-9.1.13-4-windows-x64-binaries.zip</zipFile>
+                            <zipFile>${installdir}/postgresql-9.1.13-4-${pgsqlPlatform}-binaries.zip</zipFile>
                         </unzip>
                         <createDirectory>
                             <path>${postgresinstalldir}/pgsql/data</path>
@@ -694,9 +730,22 @@
                             <key>max_prepared_transactions</key>
                             <value>10</value>
                         </propertiesFileSet>
+                        <propertiesFileSet>
+                            <file>${postgresinstalldir}/pgsql/data/postgresql.conf</file>
+                            <key>port</key>
+                            <value>${db_port}</value>
+                        </propertiesFileSet>
+                        <waitForPort>
+                            <port>${db_port}</port>
+                            <state>in_use</state>
+                            <timeout>10000</timeout>
+                        </waitForPort>
+                        <wait>
+                            <ms>5000</ms>
+                        </wait>
                         <runProgram>
-                            <program>${postgresinstalldir}/pgsql/bin/pg_ctl.exe</program>
-                            <programArguments>start &amp;amp;</programArguments>
+                            <program>${postgresinstalldir}/pgsql/bin/pg_ctl</program>
+                            <programArguments>start -w -t 10 -l postgresql.log</programArguments>
                             <progressText>Starting PostgreSQL server...</progressText>
                             <useMSDOSPath>0</useMSDOSPath>
                             <onErrorActionList>
@@ -707,16 +756,16 @@
                         </runProgram>
                         <runProgram>
                             <program>${postgresinstalldir}/pgsql/bin/psql</program>
-                            <programArguments>-d postgres -c "CREATE ROLE bonita WITH LOGIN PASSWORD 'bpm'"</programArguments>
+                            <programArguments>-p ${db_port} -d postgres -c "CREATE ROLE ${dbUsername} WITH LOGIN PASSWORD '${dbPassword}'"</programArguments>
                             <progressText>Creating Bonita BPM user...</progressText>
                         </runProgram>
                         <runProgram>
                             <program>${postgresinstalldir}/pgsql/bin/psql</program>
-                            <programArguments>-d postgres -c "CREATE DATABASE bonitabpm6"</programArguments>
+                            <programArguments>-p ${db_port} -d postgres -c "CREATE DATABASE ${postgres_db_name}"</programArguments>
                         </runProgram>
                         <runProgram>
                             <program>${postgresinstalldir}/pgsql/bin/psql</program>
-                            <programArguments>-d postgres -c "GRANT ALL PRIVILEGES ON DATABASE bonitabpm6 TO bonita"</programArguments>
+                            <programArguments>-p ${db_port} -d postgres -c "GRANT ALL PRIVILEGES ON DATABASE ${postgres_db_name} TO ${dbUsername}"</programArguments>
                         </runProgram>
                     </actionList>
                     <ruleList>
@@ -824,9 +873,14 @@
             </ruleList>
         </setInstallerVariable>
     </preInstallationActionList>
+    <postUninstallerCreationActionList>
+        <deleteFile>
+            <path>${installdir}/*.zip</path>
+        </deleteFile>
+    </postUninstallerCreationActionList>
     <postUninstallationActionList>
         <deleteFile>
-            <path>${installdir}/pgsql</path>
+            <path>${installdir}/*</path>
         </deleteFile>
     </postUninstallationActionList>
     <allowComponentSelection>1</allowComponentSelection>
