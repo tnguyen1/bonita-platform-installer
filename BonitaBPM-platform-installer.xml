@@ -933,6 +933,7 @@
     <enableRollback>1</enableRollback>
     <enableTimestamp>1</enableTimestamp>
     <height>450</height>
+    <outputDirectory>.</outputDirectory>
     <vendor>Bonitasoft</vendor>
     <customLanguageFileList>
         <language>
