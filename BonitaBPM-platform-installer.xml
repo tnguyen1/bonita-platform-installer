@@ -195,6 +195,12 @@
                                 <createDirectory>
                                     <path>${bonita_home}</path>
                                     <ruleList>
+                                        <compareTextLength>
+                                            <length>0</length>
+                                            <logic>equals</logic>
+                                            <negate>1</negate>
+                                            <text>${bonita_home}</text>
+                                        </compareTextLength>
                                         <fileExists>
                                             <negate>1</negate>
                                             <path>${bonita_home}</path>
