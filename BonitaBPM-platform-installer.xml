@@ -358,20 +358,6 @@
                                     <value2>h2</value2>
                                 </compareValues>
                             </conditionRuleList>
-                            <elseActionList>
-                                <setInstallerVariable>
-                                    <name>jdbc.driver</name>
-                                    <value>org.postgresql.Driver</value>
-                                </setInstallerVariable>
-                                <setInstallerVariable>
-                                    <name>jdbc.url</name>
-                                    <value>jdbc:postgresql://localhost:${db_port}/${postgres_db_name}</value>
-                                </setInstallerVariable>
-                                <setInstallerVariable>
-                                    <name>jdbc.xa.driver</name>
-                                    <value>org.postgresql.xa.PGXADataSource</value>
-                                </setInstallerVariable>
-                            </elseActionList>
                         </if>
                     </postShowPageActionList>
                     <preShowPageActionList>
@@ -465,6 +451,20 @@
                             <width>40</width>
                         </stringParameter>
                     </parameterList>
+                    <postShowPageActionList>
+                        <setInstallerVariable>
+                            <name>jdbc.driver</name>
+                            <value>org.postgresql.Driver</value>
+                        </setInstallerVariable>
+                        <setInstallerVariable>
+                            <name>jdbc.url</name>
+                            <value>jdbc:postgresql://localhost:${db_port}/${postgres_db_name}</value>
+                        </setInstallerVariable>
+                        <setInstallerVariable>
+                            <name>jdbc.xa.driver</name>
+                            <value>org.postgresql.xa.PGXADataSource</value>
+                        </setInstallerVariable>
+                    </postShowPageActionList>
                     <ruleList>
                         <compareValues>
                             <logic>equals</logic>
@@ -706,12 +706,6 @@
                                 </compareValues>
                             </ruleList>
                         </xmlFileSet>
-						<xmlFileSet>
-							<attribute>baseDir</attribute>
-							<element>//Listener[@className="org.bonitasoft.tomcat.H2Listener"]</element>
-							<file>${installdir}/BonitaBPMCommunity-6.3.2-Tomcat-6.0.37/conf/server.xml</file>
-							<value>${bonita_home}/bonita/server/platform/work</value>
-						</xmlFileSet>
                     </actionList>
                 </actionGroup>
                 <actionGroup>
