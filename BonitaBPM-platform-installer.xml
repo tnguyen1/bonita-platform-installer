@@ -232,37 +232,6 @@
                             <value>postgres</value>
                         </option>
                     </optionList>
-                    <postShowPageActionList>
-                        <if>
-                            <actionList>
-                                <setInstallerVariable>
-                                    <name>jdbc.driver</name>
-                                    <value>org.h2.Driver</value>
-                                </setInstallerVariable>
-                                <setInstallerVariable>
-                                    <name>jdbc.url</name>
-                                    <value>jdbc:h2:tcp://localhost:9091/bonita_journal.db;MVCC=TRUE;DB_CLOSE_ON_EXIT=TRUE;IGNORECASE=TRUE;</value>
-                                </setInstallerVariable>
-                            </actionList>
-                            <conditionRuleList>
-                                <compareValues>
-                                    <logic>equals</logic>
-                                    <value1>${dbVendor}</value1>
-                                    <value2>h2</value2>
-                                </compareValues>
-                            </conditionRuleList>
-                            <elseActionList>
-                                <setInstallerVariable>
-                                    <name>jdbc.driver</name>
-                                    <value>org.postgresql.Driver</value>
-                                </setInstallerVariable>
-                                <setInstallerVariable>
-                                    <name>jdbc.url</name>
-                                    <value>jdbc:postgresql://localhost:${postgres_port}/${postgres_db_name}</value>
-                                </setInstallerVariable>
-                            </elseActionList>
-                        </if>
-                    </postShowPageActionList>
                 </choiceParameter>
                 <parameterGroup>
                     <name>db_parameter_group</name>
@@ -290,7 +259,47 @@
                             <descriptionRetype>Confirm</descriptionRetype>
                             <width>20</width>
                         </passwordParameter>
+                        <stringParameter>
+                            <name>db_port</name>
+                            <description>Port</description>
+                            <explanation></explanation>
+                            <value></value>
+                            <default>${db_default_port}</default>
+                            <allowEmptyValue>0</allowEmptyValue>
+                            <width>30</width>
+                        </stringParameter>
                     </parameterList>
+                    <postShowPageActionList>
+                        <if>
+                            <actionList>
+                                <setInstallerVariable>
+                                    <name>jdbc.driver</name>
+                                    <value>org.h2.Driver</value>
+                                </setInstallerVariable>
+                                <setInstallerVariable>
+                                    <name>jdbc.url</name>
+                                    <value>jdbc:h2:tcp://localhost:${db_port}/bonita_journal.db;MVCC=TRUE;DB_CLOSE_ON_EXIT=TRUE;IGNORECASE=TRUE;</value>
+                                </setInstallerVariable>
+                            </actionList>
+                            <conditionRuleList>
+                                <compareValues>
+                                    <logic>equals</logic>
+                                    <value1>${dbVendor}</value1>
+                                    <value2>h2</value2>
+                                </compareValues>
+                            </conditionRuleList>
+                            <elseActionList>
+                                <setInstallerVariable>
+                                    <name>jdbc.driver</name>
+                                    <value>org.postgresql.Driver</value>
+                                </setInstallerVariable>
+                                <setInstallerVariable>
+                                    <name>jdbc.url</name>
+                                    <value>jdbc:postgresql://localhost:${db_port}/${postgres_db_name}</value>
+                                </setInstallerVariable>
+                            </elseActionList>
+                        </if>
+                    </postShowPageActionList>
                     <preShowPageActionList>
                         <setInstallerVariable>
                             <name>default_db_username</name>
@@ -314,6 +323,30 @@
                                 </compareValues>
                             </ruleList>
                         </setInstallerVariable>
+                        <getFreePort>
+                            <finalPort>9999</finalPort>
+                            <initialPort>5432</initialPort>
+                            <variable>db_default_port</variable>
+                            <ruleList>
+                                <compareValues>
+                                    <logic>equals</logic>
+                                    <value1>${dbVendor}</value1>
+                                    <value2>postgres</value2>
+                                </compareValues>
+                            </ruleList>
+                        </getFreePort>
+                        <getFreePort>
+                            <finalPort>9999</finalPort>
+                            <initialPort>9091</initialPort>
+                            <variable>db_default_port</variable>
+                            <ruleList>
+                                <compareValues>
+                                    <logic>equals</logic>
+                                    <value1>${dbVendor}</value1>
+                                    <value2>h2</value2>
+                                </compareValues>
+                            </ruleList>
+                        </getFreePort>
                     </preShowPageActionList>
                 </parameterGroup>
                 <parameterGroup>
@@ -332,23 +365,7 @@
                             <allowEmptyValue>0</allowEmptyValue>
                             <width>30</width>
                         </stringParameter>
-                        <stringParameter>
-                            <name>postgres_port</name>
-                            <description>Port</description>
-                            <explanation></explanation>
-                            <value></value>
-                            <default>${postgres_default_port}</default>
-                            <allowEmptyValue>0</allowEmptyValue>
-                            <width>30</width>
-                        </stringParameter>
                     </parameterList>
-                    <preShowPageActionList>
-                        <getFreePort>
-                            <finalPort>9999</finalPort>
-                            <initialPort>5432</initialPort>
-                            <variable>postgres_default_port</variable>
-                        </getFreePort>
-                    </preShowPageActionList>
                     <ruleList>
                         <compareValues>
                             <logic>equals</logic>
@@ -425,6 +442,12 @@
                     <file>${installdir}/BonitaBPMCommunity-6.3.2-Tomcat-6.0.37/conf/Catalina/localhost/bonita.xml</file>
                     <value>${dbPassword}</value>
                 </xmlFileSet>
+                <xmlFileSet>
+                    <attribute>url</attribute>
+                    <element>//Context/Resource[@name="bonitaSequenceManagerDS"]</element>
+                    <file>${installdir}/BonitaBPMCommunity-6.3.2-Tomcat-6.0.37/conf/Catalina/localhost/bonita.xml</file>
+                    <value>${jdbc.url}</value>
+                </xmlFileSet>
                 <addTextToFile>
                     <file>${installdir}/BonitaBPMCommunity-6.3.2-Tomcat-6.0.37/bin/setenv.sh</file>
                     <text>export JRE_HOME=${jre_home}</text>
@@ -457,6 +480,12 @@
                     <element>//Service[@name="Catalina"]/Connector[@protocol="HTTP/1.1"]</element>
                     <file>${installdir}/BonitaBPMCommunity-6.3.2-Tomcat-6.0.37/conf/server.xml</file>
                     <value>${tomcatPort}</value>
+                </xmlFileSet>
+                <xmlFileSet>
+                    <attribute>tcpPort</attribute>
+                    <element>//Listener[@className="org.bonitasoft.tomcat.H2Listener"]</element>
+                    <file>${installdir}/BonitaBPMCommunity-6.3.2-Tomcat-6.0.37/conf/server.xml</file>
+                    <value>${db_port}</value>
                 </xmlFileSet>
             </postInstallationActionList>
             <startMenuShortcutList>
