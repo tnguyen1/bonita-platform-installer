@@ -706,6 +706,12 @@
                                 </compareValues>
                             </ruleList>
                         </xmlFileSet>
+						<xmlFileSet>
+							<attribute>baseDir</attribute>
+							<element>//Listener[@className="org.bonitasoft.tomcat.H2Listener"]</element>
+							<file>${installdir}/BonitaBPMCommunity-6.3.2-Tomcat-6.0.37/conf/server.xml</file>
+							<value>${bonita_home}/bonita/server/platform/work</value>
+						</xmlFileSet>
                     </actionList>
                 </actionGroup>
                 <actionGroup>
