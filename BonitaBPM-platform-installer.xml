@@ -106,21 +106,20 @@
             <selected>1</selected>
             <show>1</show>
             <folderList>
-			<folder>
-			  <description>Postgres Install Folder</description>
+                <folder>
+                    <description>Postgres Install Folder</description>
                     <destination>${postgresinstalldir}/pgsql</destination>
                     <name>postgresFolder</name>
                     <platforms>all</platforms>
-			</folder>
+                </folder>
                 <folder>
-                  
                     <description>db drivers</description>
                     <destination>${installdir}/BonitaBPMCommunity-6.3.2-Tomcat-6.0.37/lib/bonita</destination>
                     <name>drivers</name>
                     <platforms>all</platforms>
                     <distributionFileList>
                         <distributionFile>
-                            <origin>/home/emmanuel/workspace/bonita-platform-installer/drivers/postgresql-9.2-1003-jdbc4.jar</origin>
+                            <origin>${build_project_directory}/drivers/postgresql-9.2-1003-jdbc4.jar</origin>
                         </distributionFile>
                     </distributionFileList>
                     <ruleList>
@@ -803,5 +802,23 @@
             <file>${build_project_directory}/I18n/messages.properties</file>
         </language>
     </customLanguageFileList>
+    <licenseFileList>
+        <licenseFile>
+            <code>en</code>
+            <encoding>utf-8</encoding>
+            <file>${build_project_directory}/gpl-2.0.txt</file>
+        </licenseFile>
+    </licenseFileList>
+    <parameterList>
+        <licenseParameter>
+            <name>licenseFile</name>
+            <title>License Agreement</title>
+            <description>Please read the following License Agreement. You must accept the terms of this agreement before continuing with the installation.</description>
+            <explanation></explanation>
+            <file>${build_project_directory}/gpl-2.0.txt</file>
+            <fileEncoding>utf-8</fileEncoding>
+            <htmlFile></htmlFile>
+        </licenseParameter>
+    </parameterList>
 </project>
 
