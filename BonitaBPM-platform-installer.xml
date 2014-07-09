@@ -175,6 +175,15 @@
                                 </passwordParameter>
                             </parameterList>
                         </booleanParameterGroup>
+                        <stringParameter>
+                            <name>bonita_home</name>
+                            <description>Bonita home folder</description>
+                            <explanation>Bonita home is the main BonitaBPM configuration folder (leave it empty to use default value)</explanation>
+                            <value></value>
+                            <default></default>
+                            <allowEmptyValue>1</allowEmptyValue>
+                            <width>30</width>
+                        </stringParameter>
                     </parameterList>
                 </parameterGroup>
                 <parameterGroup>
@@ -420,16 +429,6 @@
                     <key>userPassword</key>
                     <value>${tenantadminpassword}</value>
                 </propertiesFileSet>
-                <substitute>
-                    <files>${installdir}/BonitaBPMCommunity-6.3.2-Tomcat-6.0.37/bin/setenv.sh</files>
-                    <type>regexp</type>
-                    <substitutionList>
-                        <substitution>
-                            <pattern>h2</pattern>
-                            <value>${dbVendor}</value>
-                        </substitution>
-                    </substitutionList>
-                </substitute>
                 <xmlFileSet>
                     <attribute>username</attribute>
                     <element>//Context/Resource[@name="bonitaSequenceManagerDS"]</element>
@@ -487,6 +486,46 @@
                     <file>${installdir}/BonitaBPMCommunity-6.3.2-Tomcat-6.0.37/conf/server.xml</file>
                     <value>${db_port}</value>
                 </xmlFileSet>
+                <substitute>
+                    <files>${installdir}/BonitaBPMCommunity-6.3.2-Tomcat-6.0.37/bin/setenv.sh</files>
+                    <type>regexp</type>
+                    <substitutionList>
+                        <substitution>
+                            <pattern>h2</pattern>
+                            <value>${dbVendor}</value>
+                        </substitution>
+                    </substitutionList>
+                </substitute>
+                <substitute>
+                    <files>${installdir}/BonitaBPMCommunity-6.3.2-Tomcat-6.0.37/bin/setenv.sh</files>
+                    <type>regexp</type>
+                    <ruleList>
+                        <compareValues>
+                            <logic>equals</logic>
+                            <negate>1</negate>
+                            <value1>${bonita_home}</value1>
+                            <value2></value2>
+                        </compareValues>
+                    </ruleList>
+                    <substitutionList>
+                        <substitution>
+                            <pattern>-Dbonita.home=.*$</pattern>
+                            <value>${bonita_home}/bonita"</value>
+                        </substitution>
+                    </substitutionList>
+                </substitute>
+                <renameFile>
+                    <destination>${bonita_home}</destination>
+                    <origin>${installdir}/BonitaBPMCommunity-6.3.2-Tomcat-6.0.37/bonita</origin>
+                    <ruleList>
+                        <compareValues>
+                            <logic>equals</logic>
+                            <negate>1</negate>
+                            <value1>${bonita_home}</value1>
+                            <value2></value2>
+                        </compareValues>
+                    </ruleList>
+                </renameFile>
             </postInstallationActionList>
             <startMenuShortcutList>
                 <startMenuShortcut>
@@ -512,6 +551,7 @@
     <componentsDirectory>.</componentsDirectory>
     <enableRollback>1</enableRollback>
     <enableTimestamp>1</enableTimestamp>
+    <height>450</height>
     <vendor>Bonitasoft</vendor>
     <customLanguageFileList>
         <language>
