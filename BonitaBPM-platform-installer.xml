@@ -4,6 +4,7 @@
     <version>1.0</version>
     <leftImage>${build_project_directory}/img/leftImage.png</leftImage>
     <logoImage>${build_project_directory}/img/topRight.png</logoImage>
+    <splashImage>${build_project_directory}/img/bar-boni-logo.png</splashImage>
     <allowLanguageSelection>1</allowLanguageSelection>
     <componentList>
         <component>
@@ -970,5 +971,10 @@
             <htmlFile></htmlFile>
         </licenseParameter>
     </parameterList>
+    <slideShowImageList>
+        <slideShowImage>
+            <path>${build_project_directory}/img/bar-boni-logo.png</path>
+        </slideShowImage>
+    </slideShowImageList>
 </project>
 
