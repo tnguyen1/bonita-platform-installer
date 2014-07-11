@@ -8,6 +8,12 @@ It also allows to bundle JRE and PostgreSQL database as an option.
 
 This tool is built using [BitRock InstallBuilder](http://installbuilder.bitrock.com).
 
+## Screenshots
+
+![Installer screenshot 1](screenshots/setup1.png?raw=true)
+![Installer screenshot 2](screenshots/setup2.png?raw=true)
+![Installer screenshot 3](screenshots/setup3.png?raw=true)
+
 ## Disclaimer
 
 - This installer is a proof of concept
