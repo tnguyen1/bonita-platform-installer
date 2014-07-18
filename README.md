@@ -1,6 +1,6 @@
 # Bonita BPM Platform Installer
 
-This is part of [Bonitasoft](www.bonitasoft.com) Living Days #2 (July 2014) organized while celebrating 5th anniversary of the company.
+This is part of [Bonitasoft](http://www.bonitasoft.com) Living Days #2 (July 2014) organized while celebrating 5th anniversary of the company.
 
 An idea was to facilitate the installation of Bonita BPM platform starting from our famous Tomcat H2 bundle.
 As a result we built an installer which enables to customize Tomcat and database configuration.
